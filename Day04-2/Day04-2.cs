@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-
+﻿
 Console.WriteLine("Please enter game input and press Enter!");
 
 List<String> input = new List<string>();
