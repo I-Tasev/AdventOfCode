@@ -24,12 +24,17 @@ for (int i = 2; i < input.Count; i++)
 }
 
 var counter = 0;
-var currentElements = allElements.Select(e => e.Key).Where(e => e.LastOrDefault() == 'A').ToList();   
-while (!currentElements.All(e => e.LastOrDefault() == 'Z'))
+var currentElements = allElements.Select(e => e.Key).Where(e => e.LastOrDefault() == 'A').ToList();
+
+//how many steps are neede to find each element
+var stepsForElements = new List<int>();
+
+while (currentElements.Any())
 {
     foreach (var instruction in instructions)
     {
         counter++;
+        var elementsToRemove = new List<string>();
         for (int i = 0; i < currentElements.Count; i++)
         {
             if (instruction == 'L')
@@ -44,14 +49,45 @@ while (!currentElements.All(e => e.LastOrDefault() == 'Z'))
             {
                 break;
             }
+            if (currentElements[i].LastOrDefault() == 'Z')
+            {
+                stepsForElements.Add(counter);
+                elementsToRemove.Add(currentElements[i]);
+            }
         }
-        if (currentElements.All(e => e.LastOrDefault() == 'Z'))
+
+        foreach (var element in elementsToRemove)
+        {
+            currentElements.Remove(element);
+        }
+
+        if (!currentElements.Any())
         {
             break;
         }
     }
 }
 
-Console.WriteLine("Steps:");
-Console.WriteLine(counter);
+var longStepsArray = stepsForElements.Select(e => (long)e).ToArray();
 
+Console.WriteLine("Steps:");
+Console.WriteLine(LCM(longStepsArray));
+
+//Calculate the greatest common divisor
+static long gcd(long n1, long n2)
+{
+    if (n2 == 0)
+    {
+        return n1;
+    }
+    else
+    {
+        return gcd(n2, n1 % n2);
+    }
+}
+
+//The Least Common Multiple 
+static long LCM(long[] numbers)
+{
+    return numbers.Aggregate((S, val) => S * val / gcd(S, val));
+}
