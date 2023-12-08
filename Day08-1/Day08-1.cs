@@ -42,6 +42,10 @@ while (element != "ZZZ")
         {
             break;
         }
+        if (element == "AAA")
+        {
+            break;
+        }
     }    
 }
 
